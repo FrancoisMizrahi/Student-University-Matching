@@ -1,1 +1,5 @@
 # Student-University-Matching
+
+The match between university students and their goal graduate universities can be considered an optimization problem. In this project, we matched the students based on their rankings of their favourite universities and their GPAs. Each university has a limited capacity of students and there is a GPA threshold to be considered as a graduate student candidate. 
+
+This interface allows you to change the total number of students and the student capacity of each graduate university. When doing so you can see the number of students who got their first, second, third, four and last choice.
