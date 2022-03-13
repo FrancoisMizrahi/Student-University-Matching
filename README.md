@@ -11,6 +11,6 @@ https://user-images.githubusercontent.com/46358459/158074151-8c6ac89c-968e-4dad-
 
 * 1 - Install Streamlit
 * 2 - Download the file student_university_streamlit.py
-* 3 - In the terminal run: streamlit run student_university_streamlit.py
+* 3 - In the terminal run: *streamlit run student_university_streamlit.py* 
 
 ps: You need gurobi installed with a working license
