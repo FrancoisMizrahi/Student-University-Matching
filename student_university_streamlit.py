@@ -34,7 +34,20 @@ uni_prob = {
     3:0.05
 }
 
+uni_min_gpa = {
+    0:3.5,
+    1:3,
+    2:2.5,
+    3:0,
+    4:0
+}
+
 student_num = st.slider("Number of Students", min_value=100, max_value=10000, step=100, value=500)
+
+students_gpa = []
+for i in range(0,student_num):
+    students_gpa.append(random.randint(20,40)/10)
+
 
 def get_ranking():
     unis = [0,1,2,3,4]
@@ -68,7 +81,6 @@ for i in range(0,student_num):
     students_choices.append(get_ranking())
 
 df = pd.DataFrame(students_choices, columns = [0, 1, 2, 3, 4])
-
 df = df.to_numpy()
 
 pref=np.zeros((student_num,5), dtype=int)
@@ -84,8 +96,10 @@ df_pref = pd.DataFrame(pref)
 # Model
 
 m = gp.Model("students")
+
 students = np.arange(0,student_num,1).tolist()
 unis = np.arange(0, 5, 1).tolist()
+
 allocation_uni= m.addVars(students,unis, name="uni_binary", vtype=GRB.BINARY)
 
 for u in unis:
@@ -94,21 +108,22 @@ for u in unis:
 for s in students:
     m.addConstr(quicksum(allocation_uni[s,u] for u in unis) <= 1)
 
-#for s in students:
-#    m.addConstr(quicksum(df_pref[u][s]*allocation_uni[s,u] for u in unis) >=1)
+#creating the auxilliary variable
+auxilliary = m.addVars(students, unis, vtype = GRB.BINARY, name = "auxillary variable")
+
+M = 10000000
+
+for u in unis:
+    for s in students:
+        m.addConstr(students_gpa[s] >= uni_min_gpa[u] - M*(1-auxilliary[s,u]))
+        m.addConstr(allocation_uni[s,u] <= M*auxilliary[s,u])
+
+
 
 m.setObjective(quicksum(allocation_uni[s,u]*df_pref[u][s] for s in students for  u in unis), GRB.MAXIMIZE)
 
 m.optimize()
 
-
-#def printSolution():
-#    if m.status == GRB.OPTIMAL:
-#        print('Result: %g' % m.objVal)
-#    else:
-#        print('No solution:', m.status)
-#
-#printSolution()
 
 choice_1, choice_2, choice_3, choice_4, choice_5 = 0,0,0,0,0
 
@@ -130,24 +145,33 @@ for s in students:
         if value.getValue()==1:
             choice_5+=1
 
+
 left_column, right_column = st.columns(2)
 
 with left_column:
     st.subheader("Business Schools:")
-    st.write("LBS (Rank 1 for 60% of students)")
-    st.write("LSE (Rank 1 for 20% of students)")
-    st.write("Warwick (Rank 1 for 10% of students)")
-    st.write("Imperial (Rank 1 for 5% of students)")
-    st.write("Oxford (Rank 1 for 5% of students)")
+    st.write("* LBS: Rank 1 for 60% of students but only accept students with GPAs above 3.5")
+    st.write("* LSE: Rank 1 for 20% of students but only accept students with GPAs above 3")
+    st.write("* Warwick: Rank 1 for 10% of students but only accept students with GPAs above 2.5")
+    st.write("* Imperial: Rank 1 for 5% of students and accept all students")
+    st.write("* Oxford: Rank 1 for 5% of students and accept all students")
 
 
 with right_column:
-    st.subheader('Result, students with:')
-    st.write('First choice:', choice_1)
-    st.write('Second choice:', choice_2)
-    st.write('Third choice:', choice_3)
-    st.write('Fourth choice:', choice_4)
-    st.write('Last choice:', choice_5)
+    st.subheader("Students happiness:")
+    st.write("* If a student is alocated to his first choice, the happiness value will be 5.")
+    st.write("* If a student is alocated to his second choice, the happiness value will be 4.")
+    st.write("* If a student is alocated to his third choice, the happiness value will be 3.")
+    st.write("* If a student is alocated to his fourth choice, the happiness value will be 2.")
+    st.write("* If a student is alocated to his last choice, the happiness value will be 1.")
+
+
+st.subheader('Result, students with:')
+st.write('First choice:', choice_1)
+st.write('Second choice:', choice_2)
+st.write('Third choice:', choice_3)
+st.write('Fourth choice:', choice_4)
+st.write('Last choice:', choice_5)
 
 
 
