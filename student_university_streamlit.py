@@ -10,7 +10,7 @@ st.title('Student University Matching')
 
 st.image("https://mlhxjisu2gky.i.optimole.com/hv2pyxI-VDXJoKT8/w:1160/h:390/q:82/https://www.clearadmit.com/wp-content/uploads/2017/09/4422_London-Business-School-Sammy-Ofer-Centre_07.jpg")
 
-st.subheader("We try to optimize student's happiness")
+st.subheader("We optimize student's happiness")
 
 st.sidebar.write("Select number of available seats")
 lbs_seats = st.sidebar.slider("LBS", min_value=1, max_value=1000, step=10, value=100)
@@ -149,32 +149,28 @@ for s in students:
 left_column, right_column = st.columns(2)
 
 with left_column:
-    st.subheader("Business Schools:")
-    st.write("* LBS: Rank 1 for 60% of students but only accept students with GPAs above 3.5")
-    st.write("* LSE: Rank 1 for 20% of students but only accept students with GPAs above 3")
-    st.write("* Warwick: Rank 1 for 10% of students but only accept students with GPAs above 2.5")
-    st.write("* Imperial: Rank 1 for 5% of students and accept all students")
-    st.write("* Oxford: Rank 1 for 5% of students and accept all students")
+    with st.expander("Business Schools:"):
+        st.write("* LBS: Rank 1 for 60% of students but only accept students with GPAs above 3.5")
+        st.write("* LSE: Rank 1 for 20% of students but only accept students with GPAs above 3")
+        st.write("* Warwick: Rank 1 for 10% of students but only accept students with GPAs above 2.5")
+        st.write("* Imperial: Rank 1 for 5% of students and accept all students")
+        st.write("* Oxford: Rank 1 for 5% of students and accept all students")
 
 
 with right_column:
-    st.subheader("Students happiness:")
-    st.write("* If a student is alocated to his first choice, the happiness value will be 5.")
-    st.write("* If a student is alocated to his second choice, the happiness value will be 4.")
-    st.write("* If a student is alocated to his third choice, the happiness value will be 3.")
-    st.write("* If a student is alocated to his fourth choice, the happiness value will be 2.")
-    st.write("* If a student is alocated to his last choice, the happiness value will be 1.")
+    with st.expander("Students happiness:"):
+        st.write("* If a student is alocated to his first choice, the happiness value will be 5.")
+        st.write("* If a student is alocated to his second choice, the happiness value will be 4.")
+        st.write("* If a student is alocated to his third choice, the happiness value will be 3.")
+        st.write("* If a student is alocated to his fourth choice, the happiness value will be 2.")
+        st.write("* If a student is alocated to his last choice, the happiness value will be 1.")
 
 
 st.subheader('Result, students with:')
+column_1, column_2, column_3 = st.columns(3)
+
 st.write('First choice:', choice_1)
 st.write('Second choice:', choice_2)
 st.write('Third choice:', choice_3)
 st.write('Fourth choice:', choice_4)
 st.write('Last choice:', choice_5)
-
-
-
-
-
-
